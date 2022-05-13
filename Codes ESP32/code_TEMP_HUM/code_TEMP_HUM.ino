@@ -1,44 +1,112 @@
+
+#include <esp_now.h>
+#include <WiFi.h>
 #include <DHT.h>            //Cargamos la librería DHT
 
 #define DHTTYPE  DHT22      //Definimos el modelo del sensor DHT22
 #define DHTPIN    4         //Se define el pin D5 del ESP32 para conectar el sensor DHT22
 #define MOVEMENT_PIN 26     //Se define el pin D26 del ESP32 para conectar la PIR de movimiento
 
-int val = LOW;
+uint8_t broadcastAddress[] = {0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
+
+// Structure example to send data
+// Must match the receiver structure
+typedef struct message_temp {
+    int id; // must be unique for each sender board
+    int temp;
+    int hum;
+    int mov;
+} message_temp;
+
+// Create a struct_message called myData
+message_temp myData_temp;
+
+// Create peer interface
+esp_now_peer_info_t peerInfo;
+
+int val_mov = LOW;
 DHT dht(DHTPIN, DHTTYPE, 22); 
+
+// callback when data is sent
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  Serial.print("\r\nLast Packet Send Status:\t");
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+}
 
 void setup() {
   pinMode(MOVEMENT_PIN, INPUT);
   Serial.begin(115200);   //Se inicia la comunicación serial 
   dht.begin();
 
+  // Set device as a Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  // Init ESP-NOW
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+
+  // Once ESPNow is successfully Init, we will register for Send CB to
+  // get the status of Trasnmitted packet
+  esp_now_register_send_cb(OnDataSent);
+  
+  // Register peer
+  memcpy(peerInfo.peer_addr, broadcastAddress, 6);
+  peerInfo.channel = 0;  
+  peerInfo.encrypt = false;
+  
+  // Add peer        
+  if (esp_now_add_peer(&peerInfo) != ESP_OK){
+    Serial.println("Failed to add peer");
+    return;
+  }
+
 }
 
 void loop() {
   //Lecturas del sensor de temperatura y humedad
-  float h = dht.readHumidity();     //Se lee la humedad y se asigna el valor a "h"
-  float t = dht.readTemperature();  //Se lee la temperatura y se asigna el valor a "t"
+  float val_hum = dht.readHumidity();     //Se lee la humedad y se asigna el valor a "h"
+  float val_tem = dht.readTemperature();  //Se lee la temperatura y se asigna el valor a "t"
 
-  if (isnan(h) || isnan(t)) {
+  if (isnan(val_hum) || isnan(val_tem)) {
       Serial.println("Fallo en la lectura");
-      return;
+      //return;
    }
  
   //Se imprimen las variables del sensor de temperatura y humedad
   Serial.println("Humedad: "); 
-  Serial.println(h);
+  Serial.println(val_hum);
   Serial.println("Temperatura: ");
-  Serial.println(t);
+  Serial.println(val_tem);
 
   //Lecturas del sensor de movimento e impresion de su valor
-  val = digitalRead(MOVEMENT_PIN);
-  if (val == HIGH) {
+  val_mov = digitalRead(MOVEMENT_PIN);
+  if (val_mov == HIGH) {
     Serial.println("Movimiento detectado!");
   }
   else {
     Serial.println("No se ha detectado movimiento!");
   }
-  delay(5000); //Se puede cambiar por un light-sleep, que deja la placa dormida, pero conectada al wifi
+
+  // Set values to send
+  myData_temp.id = 1;
+  myData_temp.temp = val_tem;
+  myData_temp.hum = val_hum;
+  myData_temp.mov = val_mov;
+
+  // Send message via ESP-NOW
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData_temp, sizeof(myData_temp));
+   
+  if (result == ESP_OK) {
+    Serial.println("Sent with success");
+  }
+  else {
+    Serial.println("Error sending the data");
+  }
+  delay(10000);
+ 
+  //delay(5000); //Se puede cambiar por un light-sleep, que deja la placa dormida, pero conectada al wifi
 }
 
 //Realizar el envio de los datos cada cierto tiempo a la otra placa
