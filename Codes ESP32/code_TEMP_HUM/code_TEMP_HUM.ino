@@ -4,10 +4,10 @@
 #include <DHT.h>            //Cargamos la librería DHT
 
 #define DHTTYPE  DHT22      //Definimos el modelo del sensor DHT22
-#define DHTPIN    4         //Se define el pin D5 del ESP32 para conectar el sensor DHT22
-#define MOVEMENT_PIN 26     //Se define el pin D26 del ESP32 para conectar la PIR de movimiento
+#define DHTPIN    14         //Se define el pin D14 del ESP32 para conectar el sensor DHT22
+#define MOVEMENT_PIN 21     //Se define el pin D26 del ESP32 para conectar la PIR de movimiento
 
-uint8_t broadcastAddress[] = {0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
+uint8_t broadcastAddress[] ={0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -16,6 +16,7 @@ typedef struct message_temp {
     int temp;
     int hum;
     int mov;
+    int aviso;
 } message_temp;
 
 // Create a struct_message called myData

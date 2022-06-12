@@ -1,7 +1,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-#define DOOR_SENSOR_PIN  23  // ESP32 pin GIOP23 connected to the OUTPUT pin of door sensor
+#define DOOR_SENSOR_PIN  2  // ESP32 pin GIOP2 connected to the OUTPUT pin of door sensor
 #define LED_PIN          17  // ESP32 pin GIOP17 connected to LED's pin
 
 #define TIME_MAX_OPEN 120000  //2 min time max open before send a message or turn off the air conditioner
@@ -14,6 +14,7 @@ int inputPin = 26; // for ESP32 microcontroller
 typedef struct message_prox {
     int id;
     int sens_prox;
+    int aviso;
 } message_prox;
 
 // Create a struct_message called myData
@@ -30,7 +31,7 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 void setup() {
   
-  pinMode(inputPin, INPUT);
+  //pinMode(inputPin, INPUT);
   pinMode(DOOR_SENSOR_PIN, INPUT_PULLUP); // set ESP32 pin to input pull-up mode
   pinMode(LED_PIN, OUTPUT);               // set ESP32 pin to output mode
   Serial.begin(115200);   //Se inicia la comunicación serial 
@@ -78,6 +79,7 @@ void loop() {
     // Set values to send
   myData_prox.id = 2;
   myData_prox.sens_prox = doorState;
+  
 
   // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData_prox, sizeof(myData_prox));
