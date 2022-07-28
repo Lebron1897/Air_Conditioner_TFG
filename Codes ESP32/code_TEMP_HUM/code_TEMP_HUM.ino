@@ -1,5 +1,6 @@
 
 #include <esp_now.h>
+#include <esp_wifi.h>
 #include <WiFi.h>
 #include <DHT.h>            //Cargamos la librería DHT
 
@@ -8,6 +9,7 @@
 #define MOVEMENT_PIN 21     //Se define el pin D26 del ESP32 para conectar la PIR de movimiento
 
 uint8_t broadcastAddress[] ={0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
+constexpr char WIFI_SSID[] = "OliveNet-1897"; 
 
 // Structure example to send data
 // Must match the receiver structure
@@ -34,6 +36,17 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
 
+int32_t getWiFiChannel(const char *ssid) {
+  if (int32_t n = WiFi.scanNetworks()) {
+      for (uint8_t i=0; i<n; i++) {
+          if (!strcmp(ssid, WiFi.SSID(i).c_str())) {
+              return WiFi.channel(i);
+          }
+      }
+  }
+  return 0;
+}
+
 void setup() {
   pinMode(MOVEMENT_PIN, INPUT);
   Serial.begin(115200);   //Se inicia la comunicación serial 
@@ -41,6 +54,15 @@ void setup() {
 
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
+
+  int32_t channel = getWiFiChannel(WIFI_SSID);
+
+  WiFi.printDiag(Serial); // Uncomment to verify channel number before
+  esp_wifi_set_promiscuous(true);
+  esp_wifi_set_channel(channel, WIFI_SECOND_CHAN_NONE);
+  esp_wifi_set_promiscuous(false);
+  WiFi.printDiag(Serial); // Uncomment to verify channel change after
+
 
   // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
