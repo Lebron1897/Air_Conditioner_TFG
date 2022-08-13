@@ -1,0 +1,13 @@
+Pour Copper Report
+------------------
+
+Report Written:     Saturday, August 13, 2022
+Design Path:        C:\Users\el_bo\Downloads\TFG\DESIGN PCB\PCB_IR\PCB_IR.pcb
+Design Title:       
+Created:            02/08/2022 14:33:37
+Last Saved:         03/08/2022 20:13:32
+Editing Time:       1783 min
+Units:              mm (precision 2)
+
+
+End Of Report.

@@ -1,0 +1,14 @@
+Pour Copper Report
+------------------
+
+Report Written:     Saturday, August 13, 2022
+Project Path:       C:\Users\el_bo\Downloads\TFG\DESIGN PCB\PCB_PROX\PCB_PROX.prj
+Design Path:        C:\Users\el_bo\Downloads\TFG\DESIGN PCB\PCB_PROX\PCB_PROX.pcb
+Design Title:       
+Created:            02/06/2022 16:59:53
+Last Saved:         13/06/2022 10:30:23
+Editing Time:       12 min
+Units:              mm (precision 2)
+
+
+End Of Report.
