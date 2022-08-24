@@ -9,7 +9,7 @@
 #define MOVEMENT_PIN 21     //Se define el pin D26 del ESP32 para conectar la PIR de movimiento
 
 uint8_t broadcastAddress[] ={0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
-constexpr char WIFI_SSID[] = "OliveNet-1897"; 
+constexpr char WIFI_SSID[] = "Network id"; 
 
 // Structure example to send data
 // Must match the receiver structure
