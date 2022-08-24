@@ -12,8 +12,8 @@
 const char* mqtt_server = "broker.hivemq.com"; //TFG/ConectarAA
 //const char* mqtt_server = "192.168.18.231"; //TFG/ConectarAA
 const int mqttPort = 1883;
-const char* ssid = "OliveNet-1897";         //Redmi Note 8 Pro
-const char* password = "3097539EEA86BLG";   //Yordy_1897
+const char* ssid = "Id connection";         
+const char* password = "Your Password";   
 const char* mqttUser = "";
 const char* mqttPassword = "";
 
@@ -419,6 +419,7 @@ void Comprueba_Encendido_Apagado_Man() {
 }
 
 void Comprueba_Fecha() {
+  fecha_actual = now();
   if (message_enc_prog.val_ejec == 1) {
     if ((year(fecha_actual) == message_enc_prog.val_fecha_ano) &&
         (month(fecha_actual) == message_enc_prog.val_fecha_mes) &&
@@ -486,13 +487,13 @@ void Lectura_Valores_Broker() {
 }
 
 void Seleccion_Dispositivo() {
-  switch (marca_aire) {
-    case 0: //"PANASONIC"
-      nombre_disp = "PANASONIC";
-      break;
-
-    case 1: //"MUNDO CLIMA"
+  switch (marca_aire) {  
+    case 0: //"MUNDO CLIMA"
       nombre_disp = "MUNDO CLIMA";
+      break;
+      
+    case 1: //"PANASONIC"
+      nombre_disp = "PANASONIC";
       break;
 
     case 2: //"FUJITSU"
