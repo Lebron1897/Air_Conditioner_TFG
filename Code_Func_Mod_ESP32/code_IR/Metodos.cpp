@@ -12,8 +12,8 @@
 const char* mqtt_server = "broker.hivemq.com"; //TFG/ConectarAA
 //const char* mqtt_server = "192.168.18.231"; //TFG/ConectarAA
 const int mqttPort = 1883;
-const char* ssid = "Id connection";         
-const char* password = "Your Password";   
+const char* ssid = "Network id";         
+const char* password = "NEtwork Password";   
 const char* mqttUser = "";
 const char* mqttPassword = "";
 
