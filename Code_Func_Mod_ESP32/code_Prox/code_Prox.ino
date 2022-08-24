@@ -9,7 +9,7 @@
 
 uint8_t broadcastAddress[] = {0xC8, 0xC9, 0xA3, 0xCA, 0xEB, 0x34};
 
-constexpr char WIFI_SSID[] = "OliveNet-1897"; 
+constexpr char WIFI_SSID[] = "Network id"; 
 
 int doorState;
 int inputPin = 26; // for ESP32 microcontroller
