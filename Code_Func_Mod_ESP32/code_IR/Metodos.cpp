@@ -210,10 +210,14 @@ void callback_json(char* topic, byte* payload, unsigned int length) {
     last_temp = temp_ejecucion;
   }
   
-  do{
-    Realizo_Accion_Aire();
+  if(message_enc_man.val_ejec != 0 || message_apa_man.val_ejec != 0){
+    do{
+      Realizo_Accion_Aire();
+    }
+    while (res == -1);
+  }else{
+    Mostrar_Valores_loop();
   }
-  while (res == -1);
 }
 
 void Actualiza_Cliente_loop(){
